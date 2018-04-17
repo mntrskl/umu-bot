@@ -1,0 +1,31 @@
+{
+	"engines": {
+		"node": ">=8"
+	},
+	"name": "Nero",
+	"version": "0.0.1",
+	"description": "Super friendly bot UMU!",
+	"main": "umu-bot.js",
+	"scripts": {
+		"test": "echo \"Error: no test specified\" && exit 1",
+		"start": "cross-env platform=Heroku node umu-bot.js"
+	},
+	"author": "Diego Geremia",
+	"contributors": [
+		"Diego (Jubokko)",
+		"Joel"
+	],
+	"license": "MIT",
+	"dependencies": {
+		"chalk": "^2.3.0",
+		"cross-env": "^5.1.3",
+		"discord.js": "^11.3.0",
+		"enmap": "^0.4.2",
+		"enmap-level": "^1.0.0",
+		"he": "^1.1.1",
+		"merge-img": "^2.1.2",
+		"moment": "^2.21.0",
+		"moment-duration-format": "^2.2.0",
+		"snekfetch": "^3.6.4"
+	}
+}
