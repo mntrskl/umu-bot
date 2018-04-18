@@ -27,7 +27,7 @@ const config = {
     welcomeChannel: "welcome",
     welcomeMessage:
       "Say hello to {{user}}, everyone! We all need a warm welcome sometimes :D",
-    welcomeEnabled: "true"
+    welcomeEnabled: "false"
   },
 
   // PERMISSION LEVEL DEFINITIONS.
