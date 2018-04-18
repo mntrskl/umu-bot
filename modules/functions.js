@@ -1,5 +1,4 @@
-module.exports = (client) => {
-
+module.exports = client => {
   /*
   PERMISSION LEVEL FUNCTION
 
@@ -12,7 +11,9 @@ module.exports = (client) => {
   client.permlevel = message => {
     let permlvl = 0;
 
-    const permOrder = client.config.permLevels.slice(0).sort((p, c) => p.level < c.level ? 1 : -1);
+    const permOrder = client.config.permLevels
+      .slice(0)
+      .sort((p, c) => (p.level < c.level ? 1 : -1));
 
     while (permOrder.length) {
       const currentLevel = permOrder.shift();
@@ -33,7 +34,7 @@ module.exports = (client) => {
   the default settings are used.
 
   */
-  client.getGuildSettings = (guild) => {
+  client.getGuildSettings = guild => {
     const def = client.config.defaultSettings;
     if (!guild) return def;
     const returns = {};
@@ -60,13 +61,16 @@ module.exports = (client) => {
     const filter = m => m.author.id === msg.author.id;
     await msg.channel.send(question);
     try {
-      const collected = await msg.channel.awaitMessages(filter, { max: 1, time: limit, errors: ["time"] });
+      const collected = await msg.channel.awaitMessages(filter, {
+        max: 1,
+        time: limit,
+        errors: ["time"]
+      });
       return collected.first().content;
     } catch (e) {
       return false;
     }
   };
-
 
   /*
   MESSAGE CLEAN FUNCTION
@@ -77,22 +81,24 @@ module.exports = (client) => {
   This is mostly only used by the Eval and Exec commands.
   */
   client.clean = async (client, text) => {
-    if (text && text.constructor.name == "Promise")
-      text = await text;
+    if (text && text.constructor.name == "Promise") text = await text;
     if (typeof evaled !== "string")
-      text = require("util").inspect(text, {depth: 1});
+      text = require("util").inspect(text, { depth: 1 });
 
     text = text
       .replace(/`/g, "`" + String.fromCharCode(8203))
       .replace(/@/g, "@" + String.fromCharCode(8203))
-      .replace(client.token, "mfa.VkO_2G4Qv3T--NO--lWetW_tjND--TOKEN--QFTm6YGtzq9PH--4U--tG0");
+      .replace(
+        client.token,
+        "mfa.VkO_2G4Qv3T--NO--lWetW_tjND--TOKEN--QFTm6YGtzq9PH--4U--tG0"
+      );
 
     return text;
   };
 
-  client.loadCommand = (commandName) => {
+  client.loadCommand = commandName => {
     try {
-      const props = require(`../commands/${commandName}`);
+      const props = require(`../${commandName}`);
       client.logger.log(`Loading Command: ${props.help.name}. 👌`);
       if (props.init) {
         props.init(client);
@@ -107,15 +113,16 @@ module.exports = (client) => {
     }
   };
 
-  client.unloadCommand = async (commandName) => {
+  client.unloadCommand = async commandName => {
     let command;
     if (client.commands.has(commandName)) {
       command = client.commands.get(commandName);
     } else if (client.aliases.has(commandName)) {
       command = client.commands.get(client.aliases.get(commandName));
     }
-    if (!command) return `The command \`${commandName}\` doesn"t seem to exist, nor is it an alias. Try again!`;
-  
+    if (!command)
+      return `The command \`${commandName}\` doesn"t seem to exist, nor is it an alias. Try again!`;
+
     if (command.shutdown) {
       await command.shutdown(client);
     }
@@ -124,32 +131,34 @@ module.exports = (client) => {
   };
 
   /* MISCELANEOUS NON-CRITICAL FUNCTIONS */
-  
+
   // EXTENDING NATIVE TYPES IS BAD PRACTICE. Why? Because if JavaScript adds this
   // later, this conflicts with native code. Also, if some other lib you use does
   // this, a conflict also occurs. KNOWING THIS however, the following 2 methods
-  // are, we feel, very useful in code. 
-  
-  // <String>.toPropercase() returns a proper-cased string such as: 
+  // are, we feel, very useful in code.
+
+  // <String>.toPropercase() returns a proper-cased string such as:
   // "Mary had a little lamb".toProperCase() returns "Mary Had A Little Lamb"
   String.prototype.toProperCase = function() {
-    return this.replace(/([^\W_]+[^\s-]*) */g, function(txt) {return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();});
-  };    
-  
+    return this.replace(/([^\W_]+[^\s-]*) */g, function(txt) {
+      return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();
+    });
+  };
+
   // <Array>.random() returns a single random element from an array
   // [1, 2, 3, 4, 5].random() can return 1, 2, 3, 4 or 5.
   Array.prototype.random = function() {
-    return this[Math.floor(Math.random() * this.length)]
+    return this[Math.floor(Math.random() * this.length)];
   };
 
   // `await client.wait(1000);` to "pause" for 1 second.
   client.wait = require("util").promisify(setTimeout);
 
   // These 2 process methods will catch exceptions and give *more details* about the error and stack trace.
-  process.on("uncaughtException", (err) => {
+  process.on("uncaughtException", err => {
     const errorMsg = err.stack.replace(new RegExp(`${__dirname}/`, "g"), "./");
     client.logger.error(`Uncaught Exception: ${errorMsg}`);
-    // Always best practice to let the code crash on uncaught exceptions. 
+    // Always best practice to let the code crash on uncaught exceptions.
     // Because you should be catching them anyway.
     process.exit(1);
   });

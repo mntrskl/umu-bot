@@ -29,6 +29,7 @@
     "enmap-level": "^2.0.2",
     "moment": "^2.20.1",
     "moment-duration-format": "^2.2.0",
+    "recursive-readdir": "^2.2.2",
     "snekfetch": "^3.6.4"
   }
 }

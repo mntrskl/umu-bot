@@ -1,13 +1,17 @@
 // This will check if the node version you are running is the required
 // Node version, if it isn't it will throw the following error to inform
 // you.
-if (process.version.slice(1).split(".")[0] < 8) throw new Error("Node 8.0.0 or higher is required. Update Node on your system.");
+if (process.version.slice(1).split(".")[0] < 8)
+  throw new Error(
+    "Node 8.0.0 or higher is required. Update Node on your system."
+  );
 
 // Load up the discord.js library
 const Discord = require("discord.js");
 // We also load the rest of the things we need in this file:
 const { promisify } = require("util");
 const readdir = promisify(require("fs").readdir);
+const recursive = promisify(require("recursive-readdir"));
 const Enmap = require("enmap");
 const EnmapLevel = require("enmap-level");
 
@@ -36,16 +40,15 @@ client.aliases = new Enmap();
 // Now we integrate the use of Evie's awesome Enhanced Map module, which
 // essentially saves a collection to disk. This is great for per-server configs,
 // and makes things extremely easy for this purpose.
-client.settings = new Enmap({provider: new EnmapLevel({name: "settings"})});
+client.settings = new Enmap({ provider: new EnmapLevel({ name: "settings" }) });
 
 // We're doing real fancy node 8 async/await stuff here, and to do that
 // we need to wrap stuff in an anonymous function. It's annoying but it works.
 
 const init = async () => {
-
   // Here we load **commands** into memory, as a collection, so they're accessible
   // here and everywhere else.
-  const cmdFiles = await readdir("./commands/");
+  const cmdFiles = await recursive("./commands/");
   client.logger.log(`Loading a total of ${cmdFiles.length} commands.`);
   cmdFiles.forEach(f => {
     if (!f.endsWith(".js")) return;
@@ -74,7 +77,7 @@ const init = async () => {
   // Here we login the client.
   client.login(client.config.token);
 
-// End top-level async/await function.
+  // End top-level async/await function.
 };
 
 init();
