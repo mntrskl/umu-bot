@@ -5,10 +5,10 @@ const config = {
   ownerID: values.OWNER_ID,
 
   // Bot Admins, level 9 by default. Array of user ID strings.
-  admins: [],
+  admins: values.ADMINS,
 
   // Bot Support, level 8 by default. Array of user ID strings
-  support: [],
+  support: values.SUPPORT,
 
   // Your Bot's Token. Available on https://discordapp.com/developers/applications/me
   token: values.BOT_TOKEN,
