@@ -24,7 +24,8 @@ exports.run = async (client, message, args, level) => {
         if (
           ch(children)
             .attr("sorttable_customkey")
-            .includes(args.join(" "))
+            .toLowerCase()
+            .includes(args.map(arg => arg.toLowerCase()).join(" "))
         ) {
           //   results.push({
           //     id: row.attr("id"),
