@@ -23,6 +23,7 @@
   "homepage": "https://github.com/Jubokko/umu-bot#readme",
   "dependencies": {
     "chalk": "^2.3.0",
+    "cheerio": "^1.0.0-rc.2",
     "cross-env": "^5.1.4",
     "discord.js": "^11.3.2",
     "enmap": "^2.0.4",
