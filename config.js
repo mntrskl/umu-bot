@@ -5,13 +5,16 @@ const config = {
   ownerID: values.OWNER_ID,
 
   // Bot Admins, level 9 by default. Array of user ID strings.
-  admins: values.ADMINS,
+  admins: values.BOT_ADMINS,
 
   // Bot Support, level 8 by default. Array of user ID strings
-  support: values.SUPPORT,
+  support: values.BOT_SUPPORT,
 
   // Your Bot's Token. Available on https://discordapp.com/developers/applications/me
   token: values.BOT_TOKEN,
+
+  // Api keys
+  cggApi: values.API_CGG,
 
   // Default per-server settings. New guilds have these settings.
 
