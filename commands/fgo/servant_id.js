@@ -4,8 +4,9 @@ const jsonframe = require('jsonframe-cheerio');
 const { RichEmbed } = require('discord.js');
 
 exports.run = async (client, message, args, level) => {
-	// eslint-disable-line no-unused-vars
 	if (!args || args.length < 1) return message.reply('Must provide a servant to search. Umu.');
+
+	message.react('🤔');
 
 	snek.get('https://fate-go.cirnopedia.org/servant_all.php#nav').then((r) => r.body).then((b) => {
 		let $ = cheerio.load(b);
@@ -28,11 +29,10 @@ exports.run = async (client, message, args, level) => {
 		};
 
 		const embed = new RichEmbed().setColor(0xff0000).setTitle(`Servant ID's Found`);
-
 		const scrap = $('body').scrape(frame, { string: false });
 
 		for (let servant of scrap.servants) {
-			// console.log(servant);
+			console.log(servant);
 			if (
 				servant.usa_name.toLowerCase().includes(args.map((arg) => arg.toLowerCase()).join(' ')) &&
 				embed.fields.length < 25
@@ -53,8 +53,8 @@ exports.conf = {
 };
 
 exports.help = {
-	name: 'sid',
+	name: 'fgo-id',
 	category: '🔮 Fate Grand Order',
-	description: 'Cirnopedia Servant ID search.',
-	usage: 'sid <servant name>'
+	description: 'Cirnopedia Servant ID search by name.',
+	usage: 'fgo-id <servant name>'
 };
