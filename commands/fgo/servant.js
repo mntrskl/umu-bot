@@ -37,7 +37,7 @@ exports.run = async (client, message, args, level) => {
 				servant.usa_name.toLowerCase().includes(args.map((arg) => arg.toLowerCase()).join(' ')) &&
 				embed.fields.length < 25
 			) {
-				embed.addField(servant.usa_name, `ID: ${servant.id} - ⭐️:${servant.rarity}`, true);
+				embed.addField(servant.usa_name, `ID: ${servant.id} - ${servant.rarity}`, true);
 			}
 		}
 		if (embed.fields.length > 0) message.channel.send({ embed });
