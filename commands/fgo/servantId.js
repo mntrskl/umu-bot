@@ -12,32 +12,16 @@ exports.run = async (client, message, args, level) => {
 		let $ = cheerio.load(b);
 		jsonframe($);
 
-		let frame = {
-			servants: {
-				_s: '#rounded-corner tr.US',
-				_d: [
-					{
-						id: 'td:nth-child(3) @ sorttable_customkey',
-						rarity: 'td:nth-child(2)',
-						usa_name: 'td:nth-child(4) @ sorttable_customkey',
-						jap_name: 'td:nth-child(4) a font',
-						class: 'td:nth-child(5)',
-						profile: 'td:nth-child(4) a @ href'
-					}
-				]
-			}
-		};
-
 		const embed = new RichEmbed().setColor(0xff0000).setTitle(`Servant ID's Found`);
-		const scrap = $('body').scrape(frame, { string: false });
+		const scrap = $('body').scrape(client.scrape.fgoServants, { string: false });
 
 		for (let servant of scrap.servants) {
-			console.log(servant);
+			// console.log(servant);
 			if (
-				servant.usa_name.toLowerCase().includes(args.map((arg) => arg.toLowerCase()).join(' ')) &&
+				servant.usaName.toLowerCase().includes(args.map((arg) => arg.toLowerCase()).join(' ')) &&
 				embed.fields.length < 25
 			) {
-				embed.addField(servant.usa_name, `ID: ${servant.id} - ${servant.rarity}`, true);
+				embed.addField(servant.usaName, `ID: ${servant.id} - ${servant.rarity}`, true);
 			}
 		}
 		if (embed.fields.length > 0) message.channel.send({ embed });

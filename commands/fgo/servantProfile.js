@@ -12,18 +12,18 @@ exports.run = async (client, message, args, level) => {
 		let $ = cheerio.load(b);
 		jsonframe($);
 
-		let frame = {
-			profile: {
-				_s: '#rounded-corner',
-				_d: {
-					name: 'tr:nth-child(1) > td:last-child.desc',
-					class: 'tr:nth-child(2) > td:last-child.desc',
-					rarity: 'tr:nth-child(3) > td:last-child.desc',
-					cost: 'tr:nth-child(3) > td:nth-child(0).desc'
-				}
-			}
-		};
-		// console.log($('body').scrape(frame, { string: true }));
+		// let frame = {
+		// 	profile: {
+		// 		_s: '#rounded-corner',
+		// 		_d: {
+		// 			name: 'tr:nth-child(1) > td:last-child.desc',
+		// 			class: 'tr:nth-child(2) > td:last-child.desc',
+		// 			rarity: 'tr:nth-child(3) > td:last-child.desc',
+		// 			cost: 'tr:nth-child(3) > td:nth-child(0).desc'
+		// 		}
+		// 	}
+		// };
+		console.log($('body').scrape(client.scrape.fgoServantProfile, { string: true }));
 	});
 };
 
