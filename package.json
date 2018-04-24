@@ -28,6 +28,7 @@
     "discord.js": "^11.3.2",
     "enmap": "^2.0.4",
     "enmap-level": "^2.0.2",
+    "jsonframe-cheerio": "^3.0.1",
     "moment": "^2.20.1",
     "moment-duration-format": "^2.2.0",
     "recursive-readdir": "^2.2.2",
