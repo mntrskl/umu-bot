@@ -19,7 +19,7 @@ exports.run = async (client, message, args, level) => {
 				let $ = cheerio.load(b);
 				jsonframe($);
 				let embed = new RichEmbed().setColor(0xff0000);
-				let scrap = $('body').scrape(client.scrape.fgoServantProfile, { string: false });
+				let scrap = $('body').scrape(client.scrape.cirnoServantProfile, { string: false });
 				console.log(scrap);
 
 				if (servant != 1 && scrap.profile.id == 1) return message.reply('Wrong id master...');
@@ -43,7 +43,7 @@ exports.run = async (client, message, args, level) => {
 			let $ = cheerio.load(b);
 			jsonframe($);
 			let embed = new RichEmbed().setColor(0xff0000).setTitle('`Umu. Found:`');
-			let scrap = $('body').scrape(client.scrape.fgoServants, { string: false });
+			let scrap = $('body').scrape(client.scrape.cirnoServants, { string: false });
 
 			for (var servant of scrap.servants) {
 				if (
@@ -67,8 +67,8 @@ exports.conf = {
 };
 
 exports.help = {
-	name: 'fgo-srv',
+	name: 'fgo-cirno',
 	category: '🔮 Fate Grand Order',
 	description: 'Cirnopedia Servant ID search by name.',
-	usage: 'fgo-srv <servant name | servant id .ex 025>'
+	usage: 'fgo-cirno <servant name | servant id>'
 };
