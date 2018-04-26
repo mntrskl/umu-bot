@@ -20,14 +20,18 @@ exports.run = async (client, message, args, level) => {
 				jsonframe($);
 				let embed = new RichEmbed().setColor(0xff0000);
 				let scrap = $('body').scrape(client.scrape.fgoServantProfile, { string: false });
+				console.log(scrap);
 
 				if (servant != 1 && scrap.profile.id == 1) return message.reply('Wrong id master...');
-
 				embed
 					.setTitle(`${scrap.profile.name}`)
 					.setURL(`http://fate-go.cirnopedia.org/servant_profile.php?servant=${servant}`)
 					.setThumbnail(`http://fate-go.cirnopedia.org/icons/servant/servant_${servant}1.png`)
-					.addField(`Class: ${scrap.profile.class}`, `Rarity: ${scrap.profile.rarity}`);
+					.setDescription(`\*${scrap.profile.bio}\*`)
+					.addField(`Rarity`, `${scrap.profile.rarity}`)
+					.addField(`Class`, `${scrap.profile.class}`);
+				// .addField()
+				// .addField();
 
 				if (embed.fields.length > 0) message.channel.send({ embed });
 				else message.channel.send("Umu couldn't find anything 😭");

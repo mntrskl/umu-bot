@@ -14,15 +14,34 @@ module.exports.fgoServants = {
 		]
 	}
 };
+// module.exports.fgoServantProfile = {
+// 	profile: {
+// 		_g_stats: {
+// 			_s: '#content',
+// 			_d: {
+// 				name: 'tr:nth-child(1) > .desc:last-child',
+// 				class: 'tr:nth-child(2) > .desc:last-child',
+// 				id: 'tr:nth-child(3) > .desc:nth-child(2)',
+// 				rarity: 'tr:nth-child(3) > .desc:last-child',
+// 				cost: 'tr:nth-child(3) > .desc:nth-child(0)'
+// 			}
+// 		},
+// 		_g_info: {
+// 			_s: '#content',
+// 			_d: [ { bio: '.desc2' } ]
+// 		}
+// 	}
+// };
 module.exports.fgoServantProfile = {
 	profile: {
-		_s: '#rounded-corner',
+		_s: '#content',
 		_d: {
 			name: 'tr:nth-child(1) > .desc:last-child',
 			class: 'tr:nth-child(2) > .desc:last-child',
 			id: 'tr:nth-child(3) > .desc:nth-child(2)',
 			rarity: 'tr:nth-child(3) > .desc:last-child',
-			cost: 'tr:nth-child(3) > .desc:nth-child(0)'
+			cost: 'tr:nth-child(3) > .desc:nth-child(0)',
+			bio: '.border:nth-child(1) .desc2'
 		}
 	}
 };
