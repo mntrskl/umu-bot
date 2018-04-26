@@ -18,10 +18,11 @@ module.exports.fgoServantProfile = {
 	profile: {
 		_s: '#rounded-corner',
 		_d: {
-			name: 'tr:nth-child(1) > td:last-child.desc',
-			class: 'tr:nth-child(2) > td:last-child.desc',
-			rarity: 'tr:nth-child(3) > td:last-child.desc',
-			cost: 'tr:nth-child(3) > td:nth-child(0).desc'
+			name: 'tr:nth-child(1) > .desc:last-child',
+			class: 'tr:nth-child(2) > .desc:last-child',
+			id: 'tr:nth-child(3) > .desc:nth-child(2)',
+			rarity: 'tr:nth-child(3) > .desc:last-child',
+			cost: 'tr:nth-child(3) > .desc:nth-child(0)'
 		}
 	}
 };
