@@ -65,7 +65,7 @@ exports.run = async (client, message, args, level) => {
 			servant.title.toLowerCase().includes(args.map((arg) => arg.toLowerCase()).join(' '))
 		);
 		if (!servantsFound || !servantsFound[0]) return message.reply(`Umu. Invalid servant name...`);
-		if (servantsFound.length >= 5) return message.reply(`Umu. Too many servants...`);
+		if (servantsFound.length >= 8) return message.reply(`Umu. Too many servants...`);
 		[ first, ...rest ] = servantsFound;
 		// Get scraped info from that servant's web page
 		var profileURL = await snek.get(`${first.profile}`);
