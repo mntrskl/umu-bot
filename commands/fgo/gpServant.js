@@ -5,54 +5,96 @@ const { RichEmbed } = require('discord.js');
 exports.run = async (client, message, args, level) => {
 	if (!args || args.length < 1) return message.reply('Must provide a servant to search. Umu.');
 
-	if (/^\d+$/.test(args[0])) {
-		//ID
-		message.react('🆔');
-		const servantList = await snek.get(
-			'https://grandorder.gamepress.gg/sites/grandorder/files/fgo-jsons/servants.json?v10'
-		);
-		let embed = new RichEmbed().setColor(0xff0000);
+	let embed = new RichEmbed().setColor(0xff0000);
+	let servantList = [];
 
-		var servantFound = servantList.body.find((element) => {
-			return element.servant_id == parseInt(args[0]);
+	// Collecting servant info
+	const jsonList = await snek.get(
+		'https://grandorder.gamepress.gg/sites/grandorder/files/fgo-jsons/servants.json?v10'
+	);
+	jsonList.body.forEach(function(obj) {
+		var ch = cheerio.load(obj.title);
+		servantList.push({
+			id: obj.servant_id,
+			title: ch('a').text(),
+			profile: `https://grandorder.gamepress.gg${ch('a').attr('href')}`,
+			portrait: `https://grandorder.gamepress.gg${ch('.servant-icon img').attr('src')}`,
+			class: obj.field_class,
+			stars: `${`★`.repeat(obj.stars.charAt(0))}`,
+			deck: `${ch('.servant-deck span')
+				.map(function(i, el) {
+					return ch(this).text();
+				})
+				.get()
+				.join(` `)}`,
+			tier: obj.tier,
+			release_status: obj.release_status
 		});
+	});
 
-		if (!servantFound) return message.reply(`That's the wrong number... Umu`);
-		const ch = cheerio.load(servantFound.title);
+	// Search parameter checking
+	if (/^\d+$/.test(args[0])) {
+		// It was an ID number
+		message.react('🆔');
+		var servantFound = servantList.find((element) => {
+			return element.id == parseInt(args[0]);
+		});
+		if (!servantFound) return message.reply(`Umu. Invalid ID number...`);
+
+		// console.log(servantFound);
 
 		// Get scraped info from that servant's web page
-		var servantURL = `https://grandorder.gamepress.gg${ch('a').attr('href')}`;
-		const servantInfo = await snek.get(servantURL);
-		const chd = cheerio.load(servantInfo.body);
-
-		// console.log(chd('#ratingchart').html());
+		var profileURL = await snek.get(`${servantFound.profile}`);
+		var chd = cheerio.load(profileURL.body);
 
 		// Build the response
 		embed
-			.setTitle(ch('a').text())
-			.setURL(servantURL)
+			.setTitle(servantFound.title)
+			.setURL(servantFound.profile)
 			.setDescription(`${chd('p:nth-child(14)').text()}\n\n${chd('p:nth-child(15)').text()}`)
-			.setThumbnail(`https://grandorder.gamepress.gg${ch('.servant-icon img').attr('src')}`)
-			.addField(`Class`, `\`${servantFound.field_class}\``, true)
+			.setThumbnail(servantFound.portrait)
+			.addField(`Class`, `\`${servantFound.class}\``, true)
 			.addField(`Tier`, `\`${servantFound.tier}\``, true)
-			.addField(`Rarity`, `\`${`★`.repeat(servantFound.stars.charAt(0))}\``, true)
-			.addField(
-				`Deck`,
-				`\`${ch('.servant-deck span')
-					.map(function(i, el) {
-						return ch(this).text();
-					})
-					.get()
-					.join(` `)}\``,
-				true
-			)
+			.addField(`Rarity`, `\`${servantFound.stars}\``, true)
+			.addField(`Deck`, `\`${servantFound.deck}\``, true)
 			.addField(`Release`, `\`${servantFound.release_status}\``, true);
-
-		if (embed.fields.length > 0) message.channel.send({ embed });
-		else message.channel.send("Umu couldn't find anything 😭");
 	} else {
-		message.react('🐣');
+		// It was some other string
+		message.react('📛');
+		var servantsFound = servantList.filter((servant) =>
+			servant.title.toLowerCase().includes(args.map((arg) => arg.toLowerCase()).join(' '))
+		);
+		if (!servantsFound) return message.reply(`Umu. Invalid servant name...`);
+		[ first, ...rest ] = servantsFound;
+		// Get scraped info from that servant's web page
+		var profileURL = await snek.get(`${first.profile}`);
+		var chd = cheerio.load(profileURL.body);
+
+		// Build the response
+		embed
+			.setTitle(first.title)
+			.setURL(first.profile)
+			.setDescription(`${chd('p:nth-child(14)').text()}\n\n${chd('p:nth-child(15)').text()}`)
+			.setThumbnail(first.portrait)
+			.addField(`Class`, `\`${first.class}\``, true)
+			.addField(`Tier`, `\`${first.tier}\``, true)
+			.addField(`Rarity`, `\`${first.stars}\``, true)
+			.addField(`Deck`, `\`${first.deck}\``, true)
+			.addField(`Release`, `\`${first.release_status}\``, true);
+		if (rest.length > 1 && rest.length < 10) {
+			embed.addField(
+				`Others`,
+				`${rest.map((item, i) => `\`${item.title} - ID: ${item.id}\``).join(`\n`)}`,
+				false
+			);
+		} else {
+			return message.reply(`Umu. too many possibilities...`);
+		}
 	}
+
+	// If the embed is empty is because we couldn't find anything
+	if (embed.fields.length > 0) message.channel.send({ embed });
+	else message.channel.send("Umu couldn't find anything 😭");
 };
 
 exports.conf = {
