@@ -83,11 +83,13 @@ exports.run = async (client, message, args, level) => {
 			.addField(`Deck`, `\`${first.deck}\``, true)
 			.addField(`Release`, `\`${first.release_status}\``, true);
 		if (rest.length >= 1) {
-			embed.addField(
-				`Others`,
-				`${rest.map((item, i) => `\`${item.title} - ID: ${item.id}\``).join(`\n`)}`,
-				false
-			);
+			embed
+				.addBlankField()
+				.addField(
+					`Others found`,
+					`${rest.map((item, i) => `\`${item.title} - ID: ${item.id}\``).join(`\n`)}`,
+					false
+				);
 		}
 	}
 
