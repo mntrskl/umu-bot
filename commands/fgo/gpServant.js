@@ -81,7 +81,7 @@ exports.run = async (client, message, args, level) => {
 			.addField(`Rarity`, `\`${first.stars}\``, true)
 			.addField(`Deck`, `\`${first.deck}\``, true)
 			.addField(`Release`, `\`${first.release_status}\``, true);
-		if (rest.length > 1) {
+		if (rest.length >= 1) {
 			embed.addField(
 				`Others`,
 				`${rest.map((item, i) => `\`${item.title} - ID: ${item.id}\``).join(`\n`)}`,
