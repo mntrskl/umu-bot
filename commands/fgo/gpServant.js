@@ -16,23 +16,28 @@ exports.run = async (client, message, args, level) => {
 			return element.servant_id == parseInt(args[0]);
 		});
 		if (!found) return message.reply(`HANGOVER HANGOVER HANGOVER HANGOVER`);
+
 		const ch = cheerio.load(found.title);
-		// console.log($('a').text());
+		// console.log(found);
 		embed
 			.setTitle(ch('a').text())
 			.setDescription(`\*blegfh\*`)
 			.setURL(``)
 			.setThumbnail('https://grandorder.gamepress.gg' + ch('.servant-icon img').attr('src'))
-			.addField(`Class`, ch('small').text())
+			.addField(`Class`, `\`${found.field_class}\``, true)
+			.addField(`Tier`, `\`${found.tier}\``, true)
+			.addField(`Rarity`, `\`${`★`.repeat(found.stars.charAt(0))}\``, true)
 			.addField(
 				`Deck`,
-				`${ch('.servant-deck span')
+				`\`${ch('.servant-deck span')
 					.map(function(i, el) {
 						return ch(this).text();
 					})
 					.get()
-					.join(` `)}`
-			);
+					.join(` `)}\``,
+				true
+			)
+			.addField(`Release`, `\`${found.release_status}\``, true);
 		if (embed.fields.length > 0) message.channel.send({ embed });
 		else message.channel.send("Umu couldn't find anything 😭");
 	} else {
