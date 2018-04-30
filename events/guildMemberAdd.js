@@ -16,7 +16,7 @@ module.exports = (client, member) => {
 
 	// Check if auto assinging roles is enabled
 	if (settings.newUserRoleEnabled === 'true') {
-		client.logger.cmd(`[MEMBER JOINED] ${member.user.tag}`);
+		client.logger.log(`[MEMBER JOINED] ${member.user.tag}`);
 		// Get the default role
 		var role = member.guild.roles.find('name', settings.newUserRole);
 		// Assing said role

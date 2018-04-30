@@ -8,25 +8,34 @@ exports.run = async (client, message, args, level) => {
 	if (/^\d+$/.test(args[0])) {
 		//ID
 		message.react('🆔');
-		const { body } = await snek.get(
+		const servantList = await snek.get(
 			'https://grandorder.gamepress.gg/sites/grandorder/files/fgo-jsons/servants.json?v10'
 		);
 		let embed = new RichEmbed().setColor(0xff0000);
-		var found = body.find((element) => {
+
+		var servantFound = servantList.body.find((element) => {
 			return element.servant_id == parseInt(args[0]);
 		});
-		if (!found) return message.reply(`HANGOVER HANGOVER HANGOVER HANGOVER`);
 
-		const ch = cheerio.load(found.title);
-		// console.log(found);
+		if (!servantFound) return message.reply(`That's the wrong number... Umu`);
+		const ch = cheerio.load(servantFound.title);
+
+		// Get scraped info from that servant's web page
+		var servantURL = `https://grandorder.gamepress.gg${ch('a').attr('href')}`;
+		const servantInfo = await snek.get(servantURL);
+		const chd = cheerio.load(servantInfo.body);
+
+		// console.log(chd('#ratingchart').html());
+
+		// Build the response
 		embed
 			.setTitle(ch('a').text())
-			.setDescription(`\*blegfh\*`)
-			.setURL(``)
-			.setThumbnail('https://grandorder.gamepress.gg' + ch('.servant-icon img').attr('src'))
-			.addField(`Class`, `\`${found.field_class}\``, true)
-			.addField(`Tier`, `\`${found.tier}\``, true)
-			.addField(`Rarity`, `\`${`★`.repeat(found.stars.charAt(0))}\``, true)
+			.setURL(servantURL)
+			.setDescription(`${chd('p:nth-child(14)').text()}\n\n${chd('p:nth-child(15)').text()}`)
+			.setThumbnail(`https://grandorder.gamepress.gg${ch('.servant-icon img').attr('src')}`)
+			.addField(`Class`, `\`${servantFound.field_class}\``, true)
+			.addField(`Tier`, `\`${servantFound.tier}\``, true)
+			.addField(`Rarity`, `\`${`★`.repeat(servantFound.stars.charAt(0))}\``, true)
 			.addField(
 				`Deck`,
 				`\`${ch('.servant-deck span')
@@ -37,7 +46,8 @@ exports.run = async (client, message, args, level) => {
 					.join(` `)}\``,
 				true
 			)
-			.addField(`Release`, `\`${found.release_status}\``, true);
+			.addField(`Release`, `\`${servantFound.release_status}\``, true);
+
 		if (embed.fields.length > 0) message.channel.send({ embed });
 		else message.channel.send("Umu couldn't find anything 😭");
 	} else {
