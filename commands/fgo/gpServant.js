@@ -64,7 +64,7 @@ exports.run = async (client, message, args, level) => {
 		var servantsFound = servantList.filter((servant) =>
 			servant.title.toLowerCase().includes(args.map((arg) => arg.toLowerCase()).join(' '))
 		);
-		if (!servantsFound) return message.reply(`Umu. Invalid servant name...`);
+		if (!servantsFound || servantsFound[0]) return message.reply(`Umu. Invalid servant name...`);
 		[ first, ...rest ] = servantsFound;
 		// Get scraped info from that servant's web page
 		var profileURL = await snek.get(`${first.profile}`);
