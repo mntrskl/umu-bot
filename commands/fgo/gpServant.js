@@ -1,5 +1,6 @@
 const snek = require('snekfetch');
 const cheerio = require('cheerio');
+const jsonList = require('../../util/jsons/gpServants.json');
 const { RichEmbed } = require('discord.js');
 
 exports.run = async (client, message, args, level) => {
@@ -8,11 +9,8 @@ exports.run = async (client, message, args, level) => {
 	let embed = new RichEmbed().setColor(0xff0000);
 	let servantList = [];
 
-	// Collecting servant info
-	const jsonList = await snek.get(
-		'https://grandorder.gamepress.gg/sites/grandorder/files/fgo-jsons/servants.json?v10'
-	);
-	jsonList.body.forEach(function(obj) {
+	// Converting servant info (this shouldn't be necessary)
+	jsonList.forEach(function(obj) {
 		var ch = cheerio.load(obj.title);
 		servantList.push({
 			id: obj.servant_id,
@@ -32,7 +30,7 @@ exports.run = async (client, message, args, level) => {
 		});
 	});
 
-	// Search parameter checking
+	// Search parameter check
 	if (/^\d+$/.test(args[0])) {
 		// It was an ID number
 		message.react('🆔');
@@ -40,8 +38,6 @@ exports.run = async (client, message, args, level) => {
 			return element.id == parseInt(args[0]);
 		});
 		if (!servantFound) return message.reply(`Umu. Invalid ID number...`);
-
-		// console.log(servantFound);
 
 		// Get scraped info from that servant's web page
 		var profileURL = await snek.get(`${servantFound.profile}`);
@@ -65,8 +61,10 @@ exports.run = async (client, message, args, level) => {
 			servant.title.toLowerCase().includes(args.map((arg) => arg.toLowerCase()).join(' '))
 		);
 		if (!servantsFound || !servantsFound[0]) return message.reply(`Umu. Invalid servant name...`);
-		if (servantsFound.length > 10) return message.reply(`Umu. Too many servants...`);
+		else if (servantsFound.length > 10) return message.reply(`Umu. Too many possibilities...`);
+		// Mapping results
 		[ first, ...rest ] = servantsFound;
+
 		// Get scraped info from that servant's web page
 		var profileURL = await snek.get(`${first.profile}`);
 		var chd = cheerio.load(profileURL.body);
